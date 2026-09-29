@@ -13,7 +13,7 @@ The AI reads the text. The due/not-due decision is made in `ServiceRunManager.ja
 
 ## Tech
 
-Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, React, TypeScript, and an external AI API. Images use the AWS S3 SDK with **Cloudflare R2**. This is S3-compatible storage; the app is not hosted on AWS. There is no Kafka in this version.
+Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, React, TypeScript, and an external AI API. Images use the AWS S3 SDK with **Cloudflare R2**. This uses the S3 API for file storage.
 
 ## Where to look
 
