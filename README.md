@@ -33,4 +33,4 @@ mvn spring-boot:run
 
 In a second terminal, open `frontend-reactjs/` and run `npm install` and `npm run dev`. The frontend uses `VITE_API_URL`; it defaults to `http://localhost:8080`.
 
-This public repo is a clean copy of the original service-history app. It has a basic Spring context test, but no full automated test of the recommendation flow.
+This is a public copy of my original service history project.
