@@ -1,6 +1,6 @@
-# Maintenance Recommendation Tool
+# Honda Maintenance Recommendation Tool
 
-I built this for a problem I saw while working on cars. A technician has a vehicle's service history, but the history is often long and hard to check. This app helps find services that may be due.
+I built this after seeing a problem while working as a Honda technician. A technician has a vehicle's service history, but the history is often long and hard to check. This app helps find services that may be due.
 
 ## What happens
 
