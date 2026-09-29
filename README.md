@@ -1,49 +1,36 @@
 # Maintenance Recommendation Tool
 
-A technician-focused application for turning a vehicle's free-form service history into maintenance recommendations. I built it around a problem I encountered in automotive service: identifying what has already been done, then checking what may be due at the vehicle's current mileage and date.
+I built this for a problem I saw while working on cars. A technician has a vehicle's service history, but the history is often long and hard to check. This app helps find services that may be due.
 
-## How it works
+## What happens
 
-1. A user records a repair order with vehicle details and current mileage.
-2. The user defines tracked services, mileage/month intervals, and recommendation text.
-3. `POST /services/run` sends the service history and tracked service names to an AI parser. The parser returns the most recent mileage/date it can identify for each service.
-4. `ServiceRunManager` evaluates each interval, collects due recommendations, and saves the result for the repair order. It checks ownership and prevents processing the same repair order twice.
-5. The React client shows repair orders and the resulting recommendations.
+1. The user adds a repair order with the car and its current mileage.
+2. The user sets service rules, such as every 30,000 miles or every 24 months.
+3. An AI parser reads the service history and finds the last mileage and date for each service.
+4. Java code compares those values with the rules. It saves the due services and their recommendations for the repair order.
 
-The interval decision is application code in `backend-springboot/src/main/java/com/karakoc/sofra/services/ServiceRunManager.java`. AI is used to extract history data; it does not make the final due/not-due decision.
+The AI reads the text. The due/not-due decision is made in `ServiceRunManager.java`. The backend checks that the repair order belongs to the logged-in user and does not run the same order twice.
 
-## Stack
+## Tech
 
-- Java 17, Spring Boot 3.3, Spring Security/JWT, Spring Data JPA, MySQL
-- React, TypeScript, Vite
-- External AI API for history parsing
-- AWS SDK `S3Client` configured for **Cloudflare R2** image storage (S3-compatible API, not an AWS deployment)
+Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, React, TypeScript, and an external AI API. Images use the AWS S3 SDK with **Cloudflare R2**. This is S3-compatible storage; the app is not hosted on AWS. There is no Kafka in this version.
 
-## Explore the code
+## Where to look
 
-| Area | Path |
-| --- | --- |
-| Interval evaluation and saved results | `backend-springboot/src/main/java/com/karakoc/sofra/services/ServiceRunManager.java` |
-| Repair order API | `backend-springboot/src/main/java/com/karakoc/sofra/ro/` |
-| Services and recommendations | `backend-springboot/src/main/java/com/karakoc/sofra/services/`, `serviceRecommendation/` |
-| Client | `frontend-reactjs/src/` |
+- Backend rules: `backend-springboot/src/main/java/com/karakoc/sofra/services/ServiceRunManager.java`
+- Repair orders: `backend-springboot/src/main/java/com/karakoc/sofra/ro/`
+- Services and recommendations: `backend-springboot/src/main/java/com/karakoc/sofra/services/` and `serviceRecommendation/`
+- React app: `frontend-reactjs/src/`
 
-## Local setup
+## Run locally
 
-Requires Java 17, Maven, MySQL, Node.js, and your own AI API credentials.
-
-1. Create a local MySQL database or let the configured JDBC URL create `dealership_rec`.
-2. Set `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, and `OPENAI_API_KEY` for the backend. Defaults and other integration settings are in `backend-springboot/src/main/resources/application.properties`. R2 upload requires your own `R2_*` values.
-3. Start the backend and frontend:
+You need Java 17, Maven, MySQL, and Node.js. Set `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, and `OPENAI_API_KEY`. The full list is in `backend-springboot/src/main/resources/application.properties`. Uploads also need your own `R2_*` settings.
 
 ```bash
 cd backend-springboot
 mvn spring-boot:run
-
-# In another terminal, from the repository root:
-cd frontend-reactjs
-npm install
-VITE_API_URL=http://localhost:8080 npm run dev
 ```
 
-The public source has no deployment credentials. The existing backend test is a Spring context smoke test; interval decisions and the complete AI workflow do not have an automated end-to-end test here. This snapshot contains the original service-history application, without the later experimental Kafka addition.
+In a second terminal, open `frontend-reactjs/` and run `npm install` and `npm run dev`. The frontend uses `VITE_API_URL`; it defaults to `http://localhost:8080`.
+
+This public repo is a clean copy of the original service-history app. It has a basic Spring context test, but no full automated test of the recommendation flow.
