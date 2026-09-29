@@ -7,13 +7,13 @@ I built this after seeing a problem while working as a Honda technician. A techn
 1. The user adds a repair order with the car and its current mileage.
 2. The user sets service rules, such as every 30,000 miles or every 24 months.
 3. An AI parser reads the service history and finds the last mileage and date for each service.
-4. Java code compares those values with the rules. It saves the due services and their recommendations for the repair order.
+4. Java code compares those values with the rules. It saves a result for each service and shows recommendations when a service is due.
 
 The AI reads the text. The due/not-due decision is made in `ServiceRunManager.java`. The backend checks that the repair order belongs to the logged-in user and does not run the same order twice.
 
 ## Tech
 
-Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, React, TypeScript, and an external AI API. Images use the AWS S3 SDK with **Cloudflare R2**. This uses the S3 API for file storage.
+Java 17, Spring Boot, MySQL, JPA, Spring Security/JWT, React, TypeScript, and an external AI API. File uploads use the AWS S3 SDK with **Cloudflare R2**.
 
 ## Where to look
 
